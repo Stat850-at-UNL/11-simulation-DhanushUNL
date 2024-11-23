@@ -181,7 +181,7 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results in a readable format</span></span>
 <span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"ID:"</span>, id, <span class="st">"Rolls:"</span>, <span class="fu">toString</span>(result), <span class="st">"Outcome:"</span>, <span class="fu">toString</span>(outcome)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "ID: 5 Rolls: 5, 8, 6, 10, 7 Outcome: continue playing, continue playing, continue playing, continue playing, lose"</code></pre>
+<pre><code>[1] "ID: 5 Rolls: 5, 8, 6, 4, 7 Outcome: continue playing, continue playing, continue playing, continue playing, lose"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## summarized the results to a single run</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>summarized <span class="ot">=</span> <span class="cf">function</span>(id, result, outcome){</span>
@@ -272,11 +272,11 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a><span class="fu">crap_game1</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "ID: 8 Rolls: 4, 5, 5, 6, 8, 8, 9, 4 Outcome: continue playing, continue playing, continue playing, continue playing, continue playing, continue playing, continue playing, win"
+<pre><code>[1] "ID: 1 Rolls: 3 Outcome: lose"
 # A tibble: 1 × 3
   n_rolls outcome point
-    &lt;dbl&gt; &lt;chr&gt;   &lt;int&gt;
-1       8 win         4</code></pre>
+    &lt;dbl&gt; &lt;chr&gt;   &lt;lgl&gt;
+1       1 lose    NA   </code></pre>
 </div>
 </div>
 <p>Following code produces a summarized data-frame for “N” number of games. And based on that we can summarize the wins and etc.</p>
@@ -344,16 +344,16 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   GameID Point TotalRolls Outcome
-1       1    NA          1    lose
-2       2    NA          1     win
-3       3     5          2     win
-4       4     8          3    lose
-5       5     8          3    lose
-6       6    NA          1     win
-7       7    NA          1    lose
-8       8    NA          1    lose
-9       9    10          3     win
-10     10     5          3    lose</code></pre>
+1       1     9          3     win
+2       2     5          3    lose
+3       3     8          3     win
+4       4     6          2     win
+5       5     8          5     win
+6       6     9          6    lose
+7       7     8          3     win
+8       8     6          5     win
+9       9    NA          1     win
+10     10     9          3    lose</code></pre>
 </div>
 </div>
 <p><strong>This function summarizes the data frame and calculate the winning percentage</strong></p>
@@ -381,7 +381,7 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>k <span class="ot">=</span> <span class="fu">summarize_probability</span>(x)</span>
 <span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>k</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Your winning percentage after playing  10  games is:  70 %"</code></pre>
+<pre><code>[1] "Your winning percentage after playing  10  games is:  30 %"</code></pre>
 </div>
 </div>
 <p><strong>the following function produces the all the probabilities for the specified trails and return a histogram of the frequency distribution.</strong></p>
@@ -410,11 +410,11 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>var_p <span class="ot">=</span> <span class="fu">variance_prob</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">iter =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  [1] 52 43 50 52 49 46 42 46 44 49 48 46 45 57 50 46 45 45 51 53 41 56 49 51 49
- [26] 48 49 44 50 42 54 56 54 53 48 49 41 46 53 47 53 48 43 42 49 49 53 43 44 51
- [51] 43 49 45 48 46 54 48 51 53 54 48 50 40 52 47 41 48 49 41 47 49 44 47 53 52
- [76] 56 49 56 51 52 49 55 56 45 40 38 44 50 44 56 47 50 47 50 52 58 48 52 59 51
-[1] "variance is:  20.3814141414141  and the Standard Dev :  4.51457795828294"</code></pre>
+<pre><code>  [1] 51 49 48 48 51 51 46 45 45 52 45 46 57 51 39 49 61 60 61 52 49 51 47 44 52
+ [26] 52 52 54 49 51 47 47 48 55 42 45 55 47 57 50 51 46 55 53 44 44 43 48 47 51
+ [51] 46 42 50 50 52 56 62 52 48 55 49 47 49 52 41 57 32 43 54 41 60 45 49 45 52
+ [76] 47 48 51 60 49 50 55 58 59 49 48 43 60 48 42 42 48 44 53 41 49 50 42 39 50
+[1] "variance is:  30.679898989899  and the Standard Dev :  5.53894385148459"</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
@@ -446,7 +446,7 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="fu">probability_first_attempt</span>(<span class="fu">simulate_craps_game</span>(<span class="at">n =</span> <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Your winning percentage after playing 1st time 100  games is:  26 %"</code></pre>
+<pre><code>[1] "Your winning percentage after playing 1st time 100  games is:  16 %"</code></pre>
 </div>
 </div>
 <p><strong>Second Scenario</strong></p>
@@ -470,7 +470,7 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="fu">probability_notFirst_attempt</span>(x2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Your winning percentage after not winning the 1st time 1000  games is:  36.2 %"</code></pre>
+<pre><code>[1] "Your winning percentage after not winning the 1st time 1000  games is:  33.2 %"</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -502,23 +502,23 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>win4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "chance of winning after obtaining point:  4 is 3.4 %"</code></pre>
+<pre><code>[1] "chance of winning after obtaining point:  4 is 3.1 %"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>win5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "chance of winning after obtaining point:  5 is 4 %"</code></pre>
+<pre><code>[1] "chance of winning after obtaining point:  5 is 5.1 %"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>win6</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "chance of winning after obtaining point:  6 is 7.3 %"</code></pre>
+<pre><code>[1] "chance of winning after obtaining point:  6 is 7.5 %"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>win8</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "chance of winning after obtaining point:  8 is 4.6 %"</code></pre>
+<pre><code>[1] "chance of winning after obtaining point:  8 is 6.7 %"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>win9</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "chance of winning after obtaining point:  9 is 4 %"</code></pre>
+<pre><code>[1] "chance of winning after obtaining point:  9 is 4.5 %"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>win10</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
