@@ -319,3 +319,18 @@ probability_notFirst_attempt = function(df){
 
 probability_notFirst_attempt(x2)
 ```
+
+```{r}
+
+library(dplyr)
+game_01 = crap_game(n = 1000)
+
+game_01%>%
+  filter(TotalRolls>5)%>%
+  filter(Outcome == "win")
+
+
+
+
+
+```

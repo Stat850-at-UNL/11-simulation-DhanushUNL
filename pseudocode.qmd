@@ -1,9 +1,12 @@
 ---
 title: "Pseudocode: Craps Simulation"
+author: "Dhanushka Sanjeewa"
 editor: 
   markdown: 
     wrap: sentence
 ---
+
+***Worked with Nicole, Xang and Beenu.***
 
 # Instructor Comments
 
@@ -165,6 +168,112 @@ roll_dice <- function() {
 
 Put each function in a separate code block.
 
+```         
+appendVectors <- function(roll,outcome) { 
+# Input: Die roll and outcome 
+# Output: appended vectors.
+# Description: appends id, roll, and outcome vectors with information for the most recent roll.
+  
+  id <- append(id,length(id)+1)
+  roll <- append(roll,roll)
+  outcome <- append(outcome,outcome)
+  
+  return(id,roll,outcome)
+}
+```
+
+```         
+comeOut <- function(roll) { 
+# Input: Die roll 
+# Output: win/loss message
+# Description: if the come out roll was a 7 or 11, the code displays a win message and returns a data frame. if the come out roll was a 2, 3 or 12, the function displays a lose message and returns a data frame. note in both cases, info from the roll is appended to the respective vectors (id,roll,outcome), which then are combined into the data frame that is returned in both cases.
+
+if(roll %in% c(7,11)){
+  appendVectors(roll,"Win")
+  df <- data.frame(id,roll,outcome)
+  return(win(),df)
+} else{
+  appendVectors(roll,"Lose"){
+  df <- data.frame(id,roll,outcome)
+  return(lose(),df)
+  }
+}
+}
+```
+
+```         
+pointRoll <- function(roll) { 
+# Input: Die roll 
+# Output: win/loss message
+# Description: code sets the point roll as equal to the die roll. info from the first roll is appended to the respective vectors (id, roll, outcome). the code uses the roll_die() function to roll again. 
+      - if a 7 is rolled, info is appended to the vectors, a lose message is displayed, and the vectors are
+        appended into a data frame that is also returned. 
+      - if the point is rolled, roll info is appended to the vectors, a win message is displayed, and the vectors         are appended into a data frame that gets returned.
+this function is repeated until either a 7 or point is rolled.
+
+  # set current roll as the point
+  point <- roll
+      
+  repeat{
+    append(roll,"Continue")
+    roll <- roll_die()
+    
+    if(roll == 7){
+      append(roll,"Lose")
+      df <- data.frame(id,roll,outcome)
+      return(lose(),df)
+  } else if(roll == point){
+      append(roll,"Win")
+      df <- data.frame(id,roll,outcome)
+      return(win(),df)
+  }
+}
+
+}
+```
+
+```         
+lose <- function(){
+# Input: nothing
+# Outcome: lose message
+# Description: a message saying the player lost is displayed. an option to play again is also displayed using playAgain() function.
+}
+```
+
+```         
+win <- function(){
+# Input: nothing
+# Outcome: win message
+# Description: a message saying the player won is displayed. an option to play again is also displayed using playAgain() function.
+}
+```
+
+```         
+playAgain <- function(){
+# Input: player input
+# Outcome: either quits game or restarts
+# Description: a message appears asking for player input (Q/Enter). if the player selects Q, the function stops. if the player selects Enter, a new game is started.
+
+# ask for player input (Q/Enter)
+input = 
+
+if(input == Enter){
+  simulate_craps_game()
+} else {
+
+}
+
+}
+```
+
+```         
+status <- function(){
+# Input: nothing
+# Outcome: current game stats
+# Description: a message is displayed that shows the roll number, point set, and current roll. also displays a message asking if the player wants to continue or quit using playAgain() function.
+}
+```
+
 ## Planning Main Functions {#sec-main-function-diagram}
 
 Update your flowchart from @sec-flowchart to match the requirements of this section.
@@ -180,9 +289,31 @@ Remember to fill in the input parameter inside the function definition as well a
 
 ```         
 simulate_craps_game <- function() {
-  # Input: 
-  # Output: 
-  # Description:
+  # Input: nothing
+  # Output: this function will output a data frame with the following values:
+                - id: roll #
+                - roll: # for a given roll
+                - outcome: whether the game was won, lost, or continued
+  # Description: 
+  
+  # set up vectors to record the necessary columns for the data frame
+  id <- c()
+  roll <- c()
+  outcome <- c()
+  
+  # record initial roll
+  first_roll <- roll_dice()
+
+repeat{
+  # Check the outcome of the first roll
+  if (first_roll %in% c(2,3,7,11,12)) {
+    comeOut(first_roll)
+  } else {
+      pointRoll(first_roll)
+  }
+}
+ 
+
 }
 ```
 
@@ -203,8 +334,13 @@ summarize_craps_game <- function() {
 ```         
 run_craps_simulation <- function(N) {
   # Input: an integer N which determines the number of games to simulate
-  # Output: 
-  # Description:
+  # Output: a data frame with a row for each simulation that tracks:
+              - # of rolls
+              - outcome of the game
+              - point (if applicable)
+              - if the game was over after the first roll (bin. var.)
+              
+  # Description: use the single-game craps simulation function to simulate the specified number of games. for each game, the single-game function will return the # of rolls, the outcome of the game, 
 }
 ```
 
@@ -214,3 +350,45 @@ What parts are still missing for you to write code implementing craps based on y
 What do you expect you will need to do before/during the coding process?
 Make a plan for next week's work.
 Where will you start?
+
+Pseudocode generated by Chat GPT:
+
+```         
+# Define a function to roll two dice and return their sum
+roll_dice <- function() {
+  sum(sample(1:6, 2, replace = TRUE))
+}
+
+# Define a function to simulate a single game of craps
+simulate_craps <- function() {
+  # Initial roll
+  first_roll <- roll_dice()
+  
+  # Check the outcome of the first roll
+  if (first_roll %in% c(7, 11)) {
+    return("Win")  # Win on the first roll
+  } else if (first_roll %in% c(2, 3, 12)) {
+    return("Lose")  # Lose on the first roll
+  }
+  
+  # If no immediate win or loss, establish the "point"
+  point <- first_roll
+  
+  # Keep rolling until you roll the "point" again (win) or a 7 (lose)
+  repeat {
+    new_roll <- roll_dice()
+    if (new_roll == point) {
+      return("Win")
+    } else if (new_roll == 7) {
+      return("Lose")
+    }
+  }
+}
+
+# Simulate multiple games of craps
+simulate_many_craps <- function(num_games) {
+  results <- sapply(1:num_games, function(x) simulate_craps())
+  win_rate <- mean(results == "Win")
+  return(list(results = results, win_rate = win_rate))
+}
+```

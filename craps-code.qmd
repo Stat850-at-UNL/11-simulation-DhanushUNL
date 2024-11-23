@@ -3,12 +3,7 @@ title: "Craps Simulation"
 format: html
 ---
 
-
-In this document, you should create, code, and demonstrate each function you described in [`pseudocode.qmd`](pseudocode.qmd).
-File your functions under the appropriate header. 
-Each function should have its own code chunk, which is properly set up with the appropriate programming language indicated.
-I have provided skeleton code chunks for your required functions using R syntax, but you are free to use Python or any other language covered in class. 
-Please delete or fill in my chunks with your own code.
+In this document, you should create, code, and demonstrate each function you described in [`pseudocode.qmd`](pseudocode.qmd). File your functions under the appropriate header. Each function should have its own code chunk, which is properly set up with the appropriate programming language indicated. I have provided skeleton code chunks for your required functions using R syntax, but you are free to use Python or any other language covered in class. Please delete or fill in my chunks with your own code.
 
 Make sure this document compiles before you submit your answers.
 
@@ -16,61 +11,229 @@ Make sure this document compiles before you submit your answers.
 
 ## `roll_dice`
 
-```{r}
-roll_dice <- function() {
-  # Input: None
-  # Output: an integer from 1:12
-  # Description: Generate 2 random integers from 1 to 6 and sum them
-  
-  sample(1:6, 2, replace = T) %>% sum()
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+library(stringr)
+library(ggplot2)
+library(dplyr)
+
+roll_dice = function(){
+  dice1 = sample(1:6, 1)
+  dice2 = sample(1:6, 1)
+  return(dice1 + dice2)
 }
+
 ```
 
 ```{r}
 roll_dice()
 ```
 
-
-
 # Main Functions
 
 ## `simulate_craps_game`
+
+**Note that: This function summarizes the outcomes for all the games and produces a data-frame.**
+
 ```{r}
-simulate_craps_game <- function() {
-  # Input: 
-  # Output: 
-  # Description:
+# Define the crap_game function
+simulate_craps_game = function(n = 100) {
+  # Initialize a list to store summaries for each game
+  game_summaries = list()
+
+  for (i in 1:n) {
+    id = 1   # Initialize the roll counter (number of rolls in the game)
+    outcome = NA   # The final outcome of the game (win or lose)
+    rolls = 0      # Number of rolls in the current game
+    point = NA     # Initial point is NA by default
+
+    # Roll the first dice (initial roll)
+    roll1 = roll_dice()
+    rolls = rolls + 1  # Increment the roll counter
+
+    # Check if it's a win or lose on the first roll
+    if (roll1 %in% c(2, 3, 12)) {
+      outcome = "lose"  # Immediate loss
+    } else if (roll1 %in% c(7, 11)) {
+      outcome = "win"   # Immediate win
+    } else {
+      # If no immediate win/lose, set the point to the first roll
+      point = roll1
+
+      # Otherwise, keep rolling until the point is matched or a 7 is rolled
+      while (TRUE) {
+        roll2 = roll_dice()  # Roll the dice again
+        rolls = rolls + 1  # Increment the roll counter
+
+        if (roll2 == 7) {
+          outcome = "lose"  # 7 means lose
+          break
+        } else if (roll2 == point) {
+          outcome = "win"   # Point matched, win
+          break
+        }
+      }
+    }
+
+    # Create a summary of the game
+    game_summary <- data.frame(
+      GameID = i,       # Game identifier
+      Point = point,  # The initial roll (point), NA if win/lose on first roll
+      TotalRolls = rolls,   # Total number of rolls (1 if immediate win/lose)
+      Outcome = outcome     # Final outcome (win or lose)
+    )
+
+    # Store the summary for this game in the list
+    game_summaries[[i]] = game_summary
+  }
+
+  # Combine all game summaries into a single data frame
+  final_summary = do.call(rbind, game_summaries)
+
+  # Return the final summarized results for all games
+  return(final_summary)
 }
+
+## this function summarizes the outcomes for all the games and produces a data-frame. 
 ```
 
 ```{r}
 simulate_craps_game()
 ```
 
-## `summarize_craps_game`
+## `Wiinning Percentage`
+
 ```{r}
-summarize_craps_game <- function() {
-  # Input: 
-  # Output: 
-  # Description:
+###This function summarizes the data frame and calculate the winning percentage ###
+
+summarize_probability = function(df){
+  wins = numeric()
+  for (i in 1:nrow(df)){
+    win = df[4][[1]][i]
+    if (win == "win"){
+      wins = append(wins, 1)
+    }
+    else{
+      wins = append(wins, 0)
+    }
+  }
+  y = (sum(wins)/(nrow(df)))*100
+  x = paste("Your winning percentage after playing ",nrow(df), " games is: ", y, "%" )
+  return(x)
 }
+
 ```
 
 ```{r}
-simulate_craps_game() %>% summarize_craps_game()
+
+summarize_probability(simulate_craps_game(n = 1000))
+
 ```
 
-## `run_craps_simulation`
+## `Variation of winning chances`
+
+the following function produces the all the probabilities for the specified trails and return a histogram of the frequency distribution.
+
 ```{r}
-run_craps_simulation <- function(N) {
-  # Input: an integer N which determines the number of games to simulate
-  # Output: 
-  # Description:
+############### The variation of probability of winning for each game.############
+
+## simulate 10 trials of 1000 games in each trail and calculate the probability of them.
+## the function produces the all the probabilities for the specified trails and return a histogram
+## of the frequency distribution.
+
+variance_prob = function(n, iter = 10){
+  w = character()
+  for (i in 1:iter){
+    xx = crap_game(n)
+    k = summarize_probability(xx)
+    prob = str_extract(str_squish(k), "\\d+(\\.\\d+)?\\s?%")
+    w = append(w, prob)
+  }
+  prob_numeric = as.numeric(gsub("%", "", w))
+  print(prob_numeric)
+  var_p = paste("variance is: ", var(prob_numeric)," and the Standard Dev : ", sd(prob_numeric))
+  print(var_p)
+
+  return(hist(prob_numeric, col = "blue", main = "Histogram of percentage of winning",
+             xlab = "percentage of winning"))
 }
+
+## play 10 games 10 times. 
+variance_prob(100,iter = 100)
 ```
 
+
+
+
 ```{r}
-result <- run_craps_simulation(N=5) # demonstrate result
-result
+
+## Analysis of the winning probabilities at different scenarios.
+
+## 01) 
+######## Analysis on the percentage of winning the game in the 1st attempt #######
+
+
+probability_first_attempt = function(df){
+
+  wins_df = df%>%
+    filter(TotalRolls == 1) %>%
+    mutate(win_status = ifelse(Outcome == "win", 1, 0))
+
+  y = (sum(wins_df$win_status/(nrow(df))))*100
+  x = paste("Your winning percentage after playing 1st time",nrow(df), " games is: ", y, "%" )
+  return(x)
+}
+
+## returns the probability of winning at the 1st attempt.
+
+probability_first_attempt(x)
+
+
+```
+
+## combined fucntion for craps game
+
+
+```{r}
+
+################# Combined Function for Crap Game Simulation and Analysis #############
+
+crap_game_analysis <- function(n = 100, iter = 10) {
+  # Run the Crap Game simulation for n games
+  game_results <- crap_game(n)
+  
+  # Summarize the overall winning probability
+  winning_probability_summary <- summarize_probability(game_results)
+  
+  # Calculate variance and standard deviation of winning probabilities over multiple iterations
+  variance_summary <- variance_prob(n, iter)
+  
+  # Calculate the probability of winning on the first attempt
+  first_attempt_win_probability <- probability_first_attempt(game_results)
+  
+  # Calculate the probability of winning after not winning the first attempt
+  not_first_attempt_win_probability <- probability_notFirst_attempt(game_results)
+  
+  # Create a list to store all results
+  results <- list(
+    WinningProbability = winning_probability_summary,
+    VarianceSummary = variance_summary,
+    FirstAttemptWinProbability = first_attempt_win_probability,
+    NotFirstAttemptWinProbability = not_first_attempt_win_probability
+  )
+  
+  # Return the combined results as a list
+  return(results)
+}
+
+# Example: Run the combined function for 100 games and 10 iterations
+final_results <- crap_game_analysis(n = 100, iter = 10)
+
+# View the results
+print(final_results$WinningProbability)
+print(final_results$VarianceSummary)
+print(final_results$FirstAttemptWinProbability)
+print(final_results$NotFirstAttemptWinProbability)
+
+
 ```
 
