@@ -22,6 +22,7 @@ roll_dice = function(){
   return(dice1 + dice2)
 }
 
+
 ```
 
 ```{r}
