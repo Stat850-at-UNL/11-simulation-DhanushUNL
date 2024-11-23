@@ -22,7 +22,7 @@ You will have 3 weeks to complete the steps of this assignment.
 
 2. [`craps-code.qmd`](craps-code.qmd) - you will write code (using any language taught in this class) to implement the simulated game of craps using the pseudocode created in the first week.
 
-3. [`simulation.qmd`](simulation.qmd) - you will write code to answer a complex probability question using your craps code from week 2.
+3. [`simulation.qmd`](simulate.qmd) - you will write code to answer a complex probability question using your craps code from week 2.
 
 
 I will grade `pseudocode.qmd` after the first week, `craps-code.qmd` after the second week, and `simulation.qmd` after the end of third week.
