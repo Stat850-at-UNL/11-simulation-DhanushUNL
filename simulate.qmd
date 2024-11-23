@@ -147,7 +147,7 @@ Following code produces a summarized data-frame for "N" number of games. And bas
 
 ```{r}
 # Define the crap_game function
-crap_game = function(n = 100) {
+simulate_craps_game = function(n = 100) {
   # Initialize a list to store summaries for each game
   game_summaries = list()
 
@@ -205,7 +205,7 @@ crap_game = function(n = 100) {
 }
 
 # Example run the function for 10 games
-x= crap_game(n = 10)
+x= simulate_craps_game(n = 10)
 x
 
 ```
@@ -231,7 +231,7 @@ summarize_probability = function(df){
   return(x)
 }
 
-x= crap_game(n = 10)
+x= simulate_craps_game(n = 10)
 
 k = summarize_probability(x)
 k
@@ -250,7 +250,7 @@ k
 variance_prob = function(n, iter = 10){
   w = character()
   for (i in 1:iter){
-    xx = crap_game(n)
+    xx = simulate_craps_game(n)
     k = summarize_probability(xx)
     prob = str_extract(str_squish(k), "\\d+(\\.\\d+)?\\s?%")
     w = append(w, prob)
@@ -260,11 +260,10 @@ variance_prob = function(n, iter = 10){
   var_p = paste("variance is: ", var(prob_numeric)," and the Standard Dev : ", sd(prob_numeric))
   print(var_p)
 
-  return(hist(prob_numeric, col = "blue", main = "Histogram of percentage of winning",
-             xlab = "percentage of winning"))
+  return(hist(prob_numeric, col = "blue", main = "Histogram of percentage of winning", xlab = "percentage of winning"))
 }
 
-var_p = variance_prob(n = 10, iter = 100)
+var_p = variance_prob(n = 100, iter = 100)
 
 
 ```
@@ -291,7 +290,7 @@ probability_first_attempt = function(df){
 
 ## returns the probability of winning at the 1st attempt.
 
-probability_first_attempt(x)
+probability_first_attempt(simulate_craps_game(n = 100))
 
 
 
@@ -303,7 +302,7 @@ probability_first_attempt(x)
 # 02)
 ######## probability of not winning at the 1st attempt, but eventually wins #######
 
-x2 = crap_game(1000)
+x2 = simulate_craps_game(1000)
 
 
 probability_notFirst_attempt = function(df){
@@ -318,19 +317,42 @@ probability_notFirst_attempt = function(df){
 }
 
 probability_notFirst_attempt(x2)
+
 ```
 
 ```{r}
+## winning when the point is either 4,5,6,8,9,10
 
 library(dplyr)
-game_01 = crap_game(n = 1000)
 
-game_01%>%
-  filter(TotalRolls>5)%>%
-  filter(Outcome == "win")
+summary_prob = function(point){
+  game_01 = simulate_craps_game(n = 1000)
+  
+  if (point %in% c(4, 5, 6, 8, 9, 10)) {
+    
+    win_point = game_01%>%
+      filter(Point == point)%>%
+      filter(Outcome == "win")
+    
+    probability = nrow(win_point)/ nrow(game_01)
+    
+  }
+  return(paste("chance of winning after obtaining point: ", point, "is", probability*100,"%"))
+}
 
+win4 = summary_prob(4) # chance of winning when the point is 4 
+win5 = summary_prob(5) # chance of winning when the point is 5 
+win6 = summary_prob(6) # chance of winning when the point is 6 
+win8 = summary_prob(8) # chance of winning when the point is 8 
+win9 = summary_prob(9) # chance of winning when the point is 9 
+win10 = summary_prob(10) # chance of winning when the point is 10 
 
-
+win4
+win5
+win6
+win8
+win9
+win10
 
 
 ```
