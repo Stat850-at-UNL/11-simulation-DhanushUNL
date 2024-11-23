@@ -143,7 +143,7 @@ the following function produces the all the probabilities for the specified trai
 variance_prob = function(n, iter = 10){
   w = character()
   for (i in 1:iter){
-    xx = crap_game(n)
+    xx = simulate_craps_game(n)
     k = summarize_probability(xx)
     prob = str_extract(str_squish(k), "\\d+(\\.\\d+)?\\s?%")
     w = append(w, prob)
@@ -161,9 +161,9 @@ variance_prob = function(n, iter = 10){
 variance_prob(100,iter = 100)
 ```
 
+## Analysis of the winning probabilities at different scenarios.
 
-
-
+### Scenario 01
 ```{r}
 
 ## Analysis of the winning probabilities at different scenarios.
@@ -185,10 +185,35 @@ probability_first_attempt = function(df){
 
 ## returns the probability of winning at the 1st attempt.
 
-probability_first_attempt(x)
+probability_first_attempt(simulate_craps_game(n = 100))
 
 
 ```
+### Scenario 02
+
+```{r}
+# 02)
+######## probability of not winning at the 1st attempt, but eventually wins #######
+
+x2 = simulate_craps_game(1000)
+
+
+probability_notFirst_attempt = function(df){
+
+  wins_df = df%>%
+    filter(TotalRolls == 1) %>%
+    mutate(win_status = ifelse(Outcome == "win", 1, 0))
+
+  y = ((nrow(wins_df))/nrow(df))*100
+  x = paste("Your winning percentage after not winning the 1st time",nrow(df), " games is: ", y, "%" )
+  return(x)
+}
+
+probability_notFirst_attempt(x2)
+
+```
+
+
 
 ## combined fucntion for craps game
 
@@ -199,7 +224,7 @@ probability_first_attempt(x)
 
 crap_game_analysis <- function(n = 100, iter = 10) {
   # Run the Crap Game simulation for n games
-  game_results <- crap_game(n)
+  game_results <- simulate_craps_game(n)
   
   # Summarize the overall winning probability
   winning_probability_summary <- summarize_probability(game_results)
