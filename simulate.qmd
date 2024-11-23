@@ -1,6 +1,6 @@
 ---
 title: "Crap game"
-author: "Xeng, Dhanushka"
+author: "Dhanushka"
 format: html
 editor: visual
 ---
@@ -9,7 +9,7 @@ editor: visual
 
 Following code summarizes the crap game for just one game and it produces a data-frame.
 
-```{r, message=FALSE, echo=FALSE}
+```{r}
 
 library(dplyr);library(ggplot2);library(tidyverse);library(stringr)
 
